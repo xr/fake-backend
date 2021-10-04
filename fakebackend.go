@@ -43,6 +43,75 @@ func main() {
 		})
 	})
 
+	app.Put("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
+		statusCode, statusCodeErr := strconv.Atoi(ctx.Get("statusCode"))
+
+		if delayTimeError != nil {
+			return ctx.Error(400)
+		}
+
+		if statusCodeErr != nil {
+			return ctx.Error(400)
+		}
+
+		time.Sleep(time.Duration(ms) * time.Millisecond)
+
+		ctx.SetStatus(statusCode)
+
+		return ctx.JSON(Response{
+			Name: "Fake Backend Response",
+			StatusCode: statusCode,
+			Delay: ms,
+		})
+	})
+
+	app.Delete("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
+		statusCode, statusCodeErr := strconv.Atoi(ctx.Get("statusCode"))
+
+		if delayTimeError != nil {
+			return ctx.Error(400)
+		}
+
+		if statusCodeErr != nil {
+			return ctx.Error(400)
+		}
+
+		time.Sleep(time.Duration(ms) * time.Millisecond)
+
+		ctx.SetStatus(statusCode)
+
+		return ctx.JSON(Response{
+			Name: "Fake Backend Response",
+			StatusCode: statusCode,
+			Delay: ms,
+		})
+	})
+
+	app.Post("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
+		statusCode, statusCodeErr := strconv.Atoi(ctx.Get("statusCode"))
+
+		if delayTimeError != nil {
+			return ctx.Error(400)
+		}
+
+		if statusCodeErr != nil {
+			return ctx.Error(400)
+		}
+
+		time.Sleep(time.Duration(ms) * time.Millisecond)
+
+		ctx.SetStatus(statusCode)
+
+		return ctx.JSON(Response{
+			Name: "Fake Backend Response",
+			StatusCode: statusCode,
+			Delay: ms,
+		})
+	})
+
 	// put expectedSizeKb less than the actual content length
 	app.Post("/upload/delayed/:ms/size/:expectedSizeKb", func(ctx aero.Context) error {
 		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
