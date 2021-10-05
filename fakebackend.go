@@ -21,16 +21,8 @@ func main() {
 	app := aero.New()
 
 	app.Get("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
-		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
-		statusCode, statusCodeErr := strconv.Atoi(ctx.Get("statusCode"))
-
-		if delayTimeError != nil {
-			return ctx.Error(400)
-		}
-
-		if statusCodeErr != nil {
-			return ctx.Error(400)
-		}
+		ms, _ := strconv.Atoi(ctx.Get("ms"))
+		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
 		time.Sleep(time.Duration(ms) * time.Millisecond)
 
@@ -44,16 +36,8 @@ func main() {
 	})
 
 	app.Put("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
-		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
-		statusCode, statusCodeErr := strconv.Atoi(ctx.Get("statusCode"))
-
-		if delayTimeError != nil {
-			return ctx.Error(400)
-		}
-
-		if statusCodeErr != nil {
-			return ctx.Error(400)
-		}
+		ms, _ := strconv.Atoi(ctx.Get("ms"))
+		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
 		time.Sleep(time.Duration(ms) * time.Millisecond)
 
@@ -67,16 +51,8 @@ func main() {
 	})
 
 	app.Delete("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
-		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
-		statusCode, statusCodeErr := strconv.Atoi(ctx.Get("statusCode"))
-
-		if delayTimeError != nil {
-			return ctx.Error(400)
-		}
-
-		if statusCodeErr != nil {
-			return ctx.Error(400)
-		}
+		ms, _ := strconv.Atoi(ctx.Get("ms"))
+		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
 		time.Sleep(time.Duration(ms) * time.Millisecond)
 
@@ -90,16 +66,8 @@ func main() {
 	})
 
 	app.Post("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
-		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
-		statusCode, statusCodeErr := strconv.Atoi(ctx.Get("statusCode"))
-
-		if delayTimeError != nil {
-			return ctx.Error(400)
-		}
-
-		if statusCodeErr != nil {
-			return ctx.Error(400)
-		}
+		ms, _ := strconv.Atoi(ctx.Get("ms"))
+		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
 		time.Sleep(time.Duration(ms) * time.Millisecond)
 
@@ -112,28 +80,15 @@ func main() {
 		})
 	})
 
-	// put expectedSizeKb less than the actual content length
-	app.Post("/upload/delayed/:ms/size/:expectedSizeKb", func(ctx aero.Context) error {
-		ms, delayTimeError := strconv.Atoi(ctx.Get("ms"))
-		expectedSize, expectedSizeError := strconv.Atoi(ctx.Get("expectedSizeKb"))
-		contentLength, contentLengthError := strconv.Atoi(ctx.Request().Header("Content-Length"))
-
-		if expectedSizeError != nil {
-			return ctx.Error(400)
-		}
-
-		if delayTimeError != nil {
-			return ctx.Error(400)
-		}
-
-
-		if contentLengthError != nil {
-			return ctx.Error(400)
-		}
+	// minimumSizeKb should be less than the actual content length
+	app.Post("/upload/delayed/:ms/size/:minimumSizeBytes", func(ctx aero.Context) error {
+		ms, _ := strconv.Atoi(ctx.Get("ms"))
+		minimumSizeBytes, _ := strconv.Atoi(ctx.Get("minimumSizeBytes"))
+		contentLength, _ := strconv.Atoi(ctx.Request().Header("Content-Length"))
 
 		time.Sleep(time.Duration(ms) * time.Millisecond)
 
-		if contentLength >  (expectedSize * 1024) {
+		if contentLength >  minimumSizeBytes {
 			return ctx.Error(400)
 		}
 
