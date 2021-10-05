@@ -88,7 +88,7 @@ func main() {
 
 		time.Sleep(time.Duration(ms) * time.Millisecond)
 
-		if contentLength >  minimumSizeBytes {
+		if contentLength <  minimumSizeBytes {
 			return ctx.Error(400)
 		}
 
