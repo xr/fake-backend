@@ -1,16 +1,16 @@
 package main
 
 import (
-	"time"
-	"github.com/aerogo/aero"
 	"strconv"
+	"time"
+
+	"github.com/aerogo/aero"
 )
 
-
 type Response struct {
-	Name string `json:"name"`
-	StatusCode int `json:"statusCode"`
-	Delay int `json:"delay"`
+	Name       string `json:"name"`
+	StatusCode int    `json:"statusCode"`
+	Delay      int    `json:"delay"`
 }
 
 type FileUploadResponse struct {
@@ -20,22 +20,15 @@ type FileUploadResponse struct {
 func main() {
 	app := aero.New()
 
-	app.Get("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
-		ms, _ := strconv.Atoi(ctx.Get("ms"))
-		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
-
-		time.Sleep(time.Duration(ms) * time.Millisecond)
-
-		ctx.SetStatus(statusCode)
-
+	app.Get("/", func(ctx aero.Context) error {
 		return ctx.JSON(Response{
-			Name: "Fake Backend Response",
-			StatusCode: statusCode,
-			Delay: ms,
+			Name:       "Works",
+			StatusCode: 200,
+			Delay:      0,
 		})
 	})
 
-	app.Put("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+	app.Get("/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
 		ms, _ := strconv.Atoi(ctx.Get("ms"))
 		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
@@ -44,13 +37,13 @@ func main() {
 		ctx.SetStatus(statusCode)
 
 		return ctx.JSON(Response{
-			Name: "Fake Backend Response",
+			Name:       "Fake Backend Response",
 			StatusCode: statusCode,
-			Delay: ms,
+			Delay:      ms,
 		})
 	})
 
-	app.Delete("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+	app.Put("/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
 		ms, _ := strconv.Atoi(ctx.Get("ms"))
 		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
@@ -59,13 +52,13 @@ func main() {
 		ctx.SetStatus(statusCode)
 
 		return ctx.JSON(Response{
-			Name: "Fake Backend Response",
+			Name:       "Fake Backend Response",
 			StatusCode: statusCode,
-			Delay: ms,
+			Delay:      ms,
 		})
 	})
 
-	app.Post("/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+	app.Delete("/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
 		ms, _ := strconv.Atoi(ctx.Get("ms"))
 		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
@@ -74,9 +67,24 @@ func main() {
 		ctx.SetStatus(statusCode)
 
 		return ctx.JSON(Response{
-			Name: "Fake Backend Response",
+			Name:       "Fake Backend Response",
 			StatusCode: statusCode,
-			Delay: ms,
+			Delay:      ms,
+		})
+	})
+
+	app.Post("/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+		ms, _ := strconv.Atoi(ctx.Get("ms"))
+		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
+
+		time.Sleep(time.Duration(ms) * time.Millisecond)
+
+		ctx.SetStatus(statusCode)
+
+		return ctx.JSON(Response{
+			Name:       "Fake Backend Response",
+			StatusCode: statusCode,
+			Delay:      ms,
 		})
 	})
 
@@ -88,7 +96,7 @@ func main() {
 
 		time.Sleep(time.Duration(ms) * time.Millisecond)
 
-		if contentLength <  minimumSizeBytes {
+		if contentLength < minimumSizeBytes {
 			return ctx.Error(400)
 		}
 
