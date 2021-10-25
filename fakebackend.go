@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -14,7 +16,10 @@ type Response struct {
 }
 
 type FileUploadResponse struct {
-	Message string `json:"message"`
+	Name       string `json:"name"`
+	StatusCode int    `json:"statusCode"`
+	Delay      int    `json:"delay"`
+	FileSize   int64  `json:fileSize`
 }
 
 func main() {
@@ -28,7 +33,7 @@ func main() {
 		})
 	})
 
-	app.Get("/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+	app.Get("/testing/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
 		ms, _ := strconv.Atoi(ctx.Get("ms"))
 		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
@@ -43,7 +48,7 @@ func main() {
 		})
 	})
 
-	app.Put("/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+	app.Put("/testing/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
 		ms, _ := strconv.Atoi(ctx.Get("ms"))
 		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
@@ -58,7 +63,7 @@ func main() {
 		})
 	})
 
-	app.Delete("/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+	app.Delete("/testing/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
 		ms, _ := strconv.Atoi(ctx.Get("ms"))
 		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
@@ -73,7 +78,7 @@ func main() {
 		})
 	})
 
-	app.Post("/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
+	app.Post("/testing/v1/status/:statusCode/delayed/:ms", func(ctx aero.Context) error {
 		ms, _ := strconv.Atoi(ctx.Get("ms"))
 		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
@@ -88,22 +93,48 @@ func main() {
 		})
 	})
 
-	// minimumSizeKb should be less than the actual content length
-	app.Post("/upload/delayed/:ms/size/:minimumSizeBytes", func(ctx aero.Context) error {
+	app.Post("/testing/v1/upload/status/:statusCode/delayed/:ms/size/:expectedContentLength", func(ctx aero.Context) error {
 		ms, _ := strconv.Atoi(ctx.Get("ms"))
-		minimumSizeBytes, _ := strconv.Atoi(ctx.Get("minimumSizeBytes"))
-		contentLength, _ := strconv.Atoi(ctx.Request().Header("Content-Length"))
+		expectedContentLength, _ := strconv.ParseInt(ctx.Get("expectedContentLength"), 10, 64)
+		contentLength, _ := strconv.ParseInt(ctx.Request().Header("Content-Length"), 10, 64)
+		statusCode, _ := strconv.Atoi(ctx.Get("statusCode"))
 
-		time.Sleep(time.Duration(ms) * time.Millisecond)
+		r := ctx.Request().Internal()
+		r.ParseMultipartForm(10 << 22)
+		file, handler, err := r.FormFile("file")
+		if err != nil {
+			fmt.Println("Error Retrieving the File")
+			fmt.Println(err)
+			return ctx.Error(400, err)
+		}
+		defer file.Close()
 
-		if contentLength < minimumSizeBytes {
-			return ctx.Error(400)
+		if expectedContentLength != 0 {
+			if contentLength != expectedContentLength {
+				return ctx.Error(400, errors.New("ContentLength header is not equal to expectedContentLength"))
+			}
+
+			if handler.Size > expectedContentLength {
+				return ctx.Error(400, errors.New("real file size is bigger than expectedContentLength"))
+			}
 		}
 
+		if handler.Size == 0 {
+			return ctx.Error(400, errors.New("the file is empty"))
+		}
+
+		time.Sleep(time.Duration(ms) * time.Millisecond)
+		ctx.SetStatus(statusCode)
+
 		return ctx.JSON(FileUploadResponse{
-			Message: "File Uploaded",
+			Name:       handler.Filename,
+			StatusCode: statusCode,
+			Delay:      ms,
+			FileSize:   handler.Size,
 		})
 	})
+
+	app.Config.Ports.HTTP = 4000
 
 	app.Run()
 }
