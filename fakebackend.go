@@ -19,7 +19,7 @@ type FileUploadResponse struct {
 	Name       string `json:"name"`
 	StatusCode int    `json:"statusCode"`
 	Delay      int    `json:"delay"`
-	FileSize   int64  `json:fileSize`
+	FileSize   int64  `json:"fileSize"`
 }
 
 func main() {
