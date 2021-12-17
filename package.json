@@ -1,0 +1,25 @@
+{
+  "name": "unity-common-node-fake-backend",
+  "version": "1.0.0",
+  "description": "Public slack channel: [#services-foundation-pod](https://unity.slack.com/messages/CPB6NAPDY/) <br/> [View this project in Backstage](https://backstage.corp.unity3d.com/catalog/default/component/unity-common-node-fake-backend) <br/>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Unity-Technologies/unity-common-node-fake-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Unity-Technologies/unity-common-node-fake-backend/issues"
+  },
+  "homepage": "https://github.com/Unity-Technologies/unity-common-node-fake-backend#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

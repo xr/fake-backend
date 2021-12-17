@@ -1,13 +1,11 @@
-FROM golang:1.14
+FROM node:16.13.0 as runtime
 
-WORKDIR /go/src
+WORKDIR /unity-common-node-fake-backend
 
-COPY go.mod .
-COPY go.sum .
-COPY fakebackend.go ./fakebackend.go
+COPY package*.json ./
 
-RUN go build -a -installsuffix cgo -o fakebackend ./
+RUN npm install --production
 
-EXPOSE 4000
+COPY index.js index.js
 
-CMD ["./fakebackend"]
+CMD [ "node", "index.js"]
