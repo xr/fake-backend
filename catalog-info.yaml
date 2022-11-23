@@ -7,7 +7,7 @@ metadata:
   name: unity-common-node-fake-backend
   description: "A fake backend service that can be used by Unity Game Gateway or Unity Services Gateway for load testing. "
   labels:
-    costcenter: "7020"
+    costcenter: "7025"
   links:
     - url: https://unity.slack.com/messages/CPB6NAPDY/
       title: "#services-foundation-pod"
