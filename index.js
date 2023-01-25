@@ -30,6 +30,7 @@ app.post(
       if (expectedLength) {
         if (expectedLength !== payloadSize) {
           res.status(400);
+          res.setHeader('content-type', 'application/problem+json');
           res.json({
             error: `Expected length ${expectedLength} is not equal to payload size ${payloadSize}`,
           });
