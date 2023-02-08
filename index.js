@@ -6,7 +6,7 @@ app.get("/", (req, res) => {
   res.json({ status: "ok" });
 });
 
-app.all("/testing/v1/status/:status/delayed/:ms", (req, res) => {
+app.all("/v1/status/:status/delayed/:ms", (req, res) => {
   res.status(req.params.status);
   setTimeout(() => {
     res.json({
