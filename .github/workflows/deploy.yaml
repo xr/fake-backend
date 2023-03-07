@@ -1,0 +1,55 @@
+name: Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build/push docker image
+    runs-on: [self-hosted, unity-linux-runner]
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build and push docker image
+        uses: Unity-Technologies/github-actions-workflows/actions/build-docker-image@main
+        with:
+          image_name: gcr.io/unity-source/unity-common-node-fake-backend
+          image_tag: ${GITHUB_SHA},${GITHUB_REF##*/},latest
+          workload_identity_provider: projects/637267487550/locations/global/workloadIdentityPools/github-actions-auth/providers/github-actions
+          service_account: sf-github-actions-cicd@unity-services-foundation-prd.iam.gserviceaccount.com
+          push: true
+
+  publish:
+    name: Publish to Cloud Run
+    needs: build
+    runs-on: [self-hosted, unity-linux-runner]
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - name: Checkout
+        uses: "actions/checkout@v3"
+
+      - name: Google Authentication
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: projects/637267487550/locations/global/workloadIdentityPools/github-actions-auth/providers/github-actions
+          service_account: sf-github-actions-cicd@unity-services-foundation-prd.iam.gserviceaccount.com
+
+      - name: Deploy to Cloud Run
+        id: "deploy"
+        uses: "google-github-actions/deploy-cloudrun@v1"
+        with:
+          service: fake-backend
+          project_id: unity-services-foundation-test
+          image: gcr.io/unity-source/unity-common-node-fake-backend:${{ github.sha }}
+
+      - name: Use output
+        run: 'curl "${{ steps.deploy.outputs.url }}"'
