@@ -15,6 +15,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Fetch Vault secrets
+        uses: hashicorp/vault-action@v2.5.0
+        with:
+          url: https://vault.corp.unity3d.com
+          role: github-actions-repos-all
+          path: github-actions
+          method: jwt
+          secrets: |
+            pre/data/github-actions-workflows/jfrog-readonly JFROG_ARTIFACTORY_USER | JFROG_ARTIFACTORY_READ_USER;
+            pre/data/github-actions-workflows/jfrog-readonly JFROG_ARTIFACTORY_TOKEN | JFROG_ARTIFACTORY_READ_TOKEN;
+
       - name: Build and push docker image
         uses: Unity-Technologies/github-actions-workflows/actions/build-docker-image@main
         with:
@@ -23,6 +34,9 @@ jobs:
           workload_identity_provider: projects/637267487550/locations/global/workloadIdentityPools/github-actions-auth/providers/github-actions
           service_account: sf-github-actions-cicd@unity-services-foundation-prd.iam.gserviceaccount.com
           push: true
+          docker_build_extra_args: |
+            --build-arg JFROG_ARTIFACTORY_READ_USER=${{ env.JFROG_ARTIFACTORY_READ_USER }}
+            --build-arg JFROG_ARTIFACTORY_READ_TOKEN=${{ env.JFROG_ARTIFACTORY_READ_TOKEN }}
 
   publish:
     name: Publish to Cloud Run
@@ -30,22 +44,22 @@ jobs:
     runs-on: [self-hosted, unity-linux-runner]
 
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: 'read'
+      id-token: 'write'
 
     steps:
       - name: Checkout
-        uses: "actions/checkout@v3"
+        uses: 'actions/checkout@v3'
 
       - name: Google Authentication
-        uses: "google-github-actions/auth@v1"
+        uses: 'google-github-actions/auth@v1'
         with:
           workload_identity_provider: projects/637267487550/locations/global/workloadIdentityPools/github-actions-auth/providers/github-actions
           service_account: sf-github-actions-cicd@unity-services-foundation-prd.iam.gserviceaccount.com
 
       - name: Deploy to Cloud Run
-        id: "deploy"
-        uses: "google-github-actions/deploy-cloudrun@v1"
+        id: 'deploy'
+        uses: 'google-github-actions/deploy-cloudrun@v1'
         with:
           service: fake-backend
           project_id: unity-services-foundation-test
