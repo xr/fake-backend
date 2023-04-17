@@ -1,5 +1,8 @@
 FROM node:16.13.0 as runtime
 
+ARG JFROG_ARTIFACTORY_READ_USER
+ARG JFROG_ARTIFACTORY_READ_TOKEN
+
 WORKDIR /unity-common-node-fake-backend
 
 COPY package*.json ./
