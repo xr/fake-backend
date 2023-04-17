@@ -46,6 +46,13 @@ const secret = 'test-secret';
 
   app.all(
     '/v1/asymmetric/status/:status/delayed/:ms',
+    (req, res, next) => {
+      console.log(
+        'URL:',
+        `${req.protocol}://${req.headers.host}${req.originalUrl}`,
+      );
+      next();
+    },
     asymmetricJWSValidator.expressValidate,
     (req, res) => {
       res.status(req.params.status);
