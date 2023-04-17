@@ -14,6 +14,8 @@ const secret = 'test-secret';
 
   await asymmetricJWSValidator.init();
 
+  app.enable('trust proxy');
+
   app.get('/', (req, res) => {
     res.json({ status: 'ok' });
   });
