@@ -21,7 +21,7 @@ const secret = 'test-secret';
   });
 
   app.all('/v1/status/:status/delayed/:ms', (req, res) => {
-    res.status(req.params.status);
+    res.status(Number(req.params.status));
     setTimeout(() => {
       res.json({
         name: 'Fake Backend Response',
@@ -35,7 +35,7 @@ const secret = 'test-secret';
     '/v1/symmetric/status/:status/delayed/:ms',
     expressValidateJWS(secret),
     (req, res) => {
-      res.status(req.params.status);
+      res.status(Number(req.params.status));
       setTimeout(() => {
         res.json({
           name: 'Fake Backend Response',
@@ -57,7 +57,7 @@ const secret = 'test-secret';
     },
     asymmetricJWSValidator.expressValidate,
     (req, res) => {
-      res.status(req.params.status);
+      res.status(Number(req.params.status));
       setTimeout(() => {
         res.json({
           name: 'Fake Backend Response',
@@ -88,7 +88,7 @@ const secret = 'test-secret';
         }
 
         setTimeout(() => {
-          res.status(req.params.status);
+          res.status(Number(req.params.status));
           res.json({
             name: 'Fake Backend Response',
             statusCode: req.params.status,
@@ -109,7 +109,7 @@ const secret = 'test-secret';
     (req, res) => {
       let payloadSize = 0;
       setTimeout(() => {
-        res.status(req.params.status);
+        res.status(Number(req.params.status));
         res.json({
           name: 'Fake Backend Response',
           statusCode: req.params.status,
