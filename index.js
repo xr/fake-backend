@@ -27,6 +27,7 @@ const secret = 'test-secret';
         name: 'Fake Backend Response',
         statusCode: req.params.status,
         delay: req.params.ms,
+        headers: req.headers,
       });
     }, req.params.ms);
   });
