@@ -20,6 +20,25 @@ const secret = 'test-secret';
     res.json({ status: 'ok' });
   });
 
+  app.get('/echo', (req, res) => {
+
+    res.send({
+      headers: req.headers,
+      query: req.query,
+      params: req.params,
+      url: req.url,
+      body: req.body,
+      hostname: req.hostname,
+      ip: req.ip,
+      ips: req.ips,
+      method: req.method,
+      baseUrl: req.baseUrl,
+      originalUrl: req.originalUrl,
+      protocol: req.protocol,
+      cookies: req.cookies,
+    });
+  });
+
   app.all('/v1/status/:status/delayed/:ms', (req, res) => {
     res.status(Number(req.params.status));
     setTimeout(() => {
