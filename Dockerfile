@@ -13,5 +13,6 @@ RUN curl -u $JFROG_ARTIFACTORY_READ_USER:$JFROG_ARTIFACTORY_READ_TOKEN https://u
 RUN npm install --production
 
 COPY index.js index.js
+COPY test_csv_file.csv test_csv_file.csv
 
 CMD [ "node", "index.js"]
