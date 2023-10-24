@@ -39,6 +39,24 @@ const secret = 'test-secret';
     });
   });
 
+
+  app.get('/csv', function (req, res) {
+    // generate random csv files
+    const numRows = 1000000;
+    const csvData = [];
+    csvData.push(['Name', 'Age', 'Email']);
+    for (let i = 0; i < numRows; i++) {
+      csvData.push([`Person ${i + 1}`, Math.floor(Math.random() * 50) + 20, `person${i + 1}@example.com`]);
+    }
+
+    const csvString = csvData.map(row => row.join(',')).join('\n');
+  
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="large_dummy.csv"');
+  
+    res.send(csvString);
+  });
+
   app.all('/v1/status/:status/delayed/:ms', (req, res) => {
     res.status(Number(req.params.status));
     setTimeout(() => {
