@@ -52,11 +52,11 @@ const secret = 'test-secret';
   });
 
   app.get('/file', function (req, res) {
-    const filePath = path.join(__dirname, 'testfile');
+    const filePath = path.join(__dirname, 'test_file');
     const stream = fs.createReadStream(filePath);
   
     res.setHeader('Content-Type', 'application/octet-stream');
-    res.setHeader('Content-Disposition', 'attachment; filename="testfile"');
+    res.setHeader('Content-Disposition', 'attachment; filename="test_file"');
 
     stream.pipe(res);
   });
