@@ -14,5 +14,6 @@ RUN npm install --production
 
 COPY index.js index.js
 COPY test_csv_file.csv test_csv_file.csv
+COPY testfile testfile
 
 CMD [ "node", "index.js"]

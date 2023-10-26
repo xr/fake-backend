@@ -52,7 +52,7 @@ const secret = 'test-secret';
   });
 
   app.get('/file', function (req, res) {
-    const filePath = path.join(__dirname, 'file_5mb');
+    const filePath = path.join(__dirname, 'testfile');
     const stream = fs.createReadStream(filePath);
   
     res.setHeader('Content-Type', 'application/octet-stream');
