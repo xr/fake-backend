@@ -51,6 +51,16 @@ const secret = 'test-secret';
     stream.pipe(res);
   });
 
+  app.get('/file', function (req, res) {
+    const filePath = path.join(__dirname, 'file_5mb');
+    const stream = fs.createReadStream(filePath);
+  
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', 'attachment; filename="testfile"');
+
+    stream.pipe(res);
+  });
+
   app.all('/v1/status/:status/delayed/:ms', (req, res) => {
     res.status(Number(req.params.status));
     setTimeout(() => {
