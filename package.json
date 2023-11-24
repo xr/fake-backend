@@ -1,45 +1,13 @@
 {
-  "name": "unity-common-node-fake-backend",
+  "name": "fake-backend",
   "version": "1.0.0",
-  "description": "Public slack channel: [#services-foundation-pod](https://unity.slack.com/messages/CPB6NAPDY/) <br/> [View this project in Backstage](https://backstage.corp.unity3d.com/catalog/default/component/unity-common-node-fake-backend) <br/>",
+  "description": "fake backend",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Unity-Technologies/unity-common-node-fake-backend.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Unity-Technologies/unity-common-node-fake-backend/issues"
-  },
-  "homepage": "https://github.com/Unity-Technologies/unity-common-node-fake-backend#readme",
   "dependencies": {
-    "@unity/node-jws-validator": "3.2.0",
-    "express": "4.18.2",
-    "@unity/eslint-config-services-foundation": "1.5.0"
-  },
-  "devDependencies": {
-    "nodemon": "2.0.22",
-    "xo": "0.54.1"
-  },
-  "xo": {
-    "envs": [
-      "node",
-      "jest"
-    ],
-    "extends": [
-      "@unity/eslint-config-services-foundation"
-    ],
-    "rules": {
-      "unicorn/filename-case": "off"
-    },
-    "prettier": true,
-    "space": true
-  },
-  "nodemonConfig": {
-    "ext": "js,yaml,yml"
+    "express": "4.18.2"
   }
 }
