@@ -98,7 +98,7 @@ const fs = require('fs');
     let payloadSize = 0;
     let chunkToString = false;
 
-    if (req.headers['chunk-to-string']) {
+    if (req.headers['chunk-to-string'] || process.env.CHUNK_TO_STRING) {
       chunkToString =true;
     }
 
