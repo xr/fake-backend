@@ -1,4 +1,4 @@
-FROM node:20.14.0 as runtime
+FROM node:20.15-alpine3.19 as runtime
 
 WORKDIR /fake-backend
 
