@@ -11,7 +11,7 @@ const fs = require('fs');
   app.get('/csv', function (req, res) {
     const filePath = path.join(__dirname, 'test_csv_file.csv');
     const stream = fs.createReadStream(filePath);
-  
+
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="test.csv"');
 
@@ -21,7 +21,7 @@ const fs = require('fs');
   app.get('/file', function (req, res) {
     const filePath = path.join(__dirname, 'test_file');
     const stream = fs.createReadStream(filePath);
-  
+
     res.setHeader('Content-Type', 'application/octet-stream');
     res.setHeader('Content-Disposition', 'attachment; filename="test_file"');
 
@@ -99,7 +99,7 @@ const fs = require('fs');
     let chunkToString = false;
 
     if (req.headers['chunk-to-string'] || process.env.CHUNK_TO_STRING) {
-      chunkToString =true;
+      chunkToString = true;
     }
 
     req.on('data', (chunk) => {
@@ -112,7 +112,7 @@ const fs = require('fs');
 
     req.on('end', () => {
       console.log(`received total payload size: ${payloadSize}`);
-      res.send({
+      let resPayload = {
         headers: req.headers,
         query: req.query,
         params: req.params,
@@ -128,7 +128,9 @@ const fs = require('fs');
         cookies: req.cookies,
         payloadSize: payloadSize,
         chunkToString: chunkToString,
-      });
+      }
+      console.log('Response Payload:', resPayload);
+      res.send(resPayload);
     });
   });
 
