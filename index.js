@@ -1,12 +1,14 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { generateResponsePayload, parseSize } = require('./response-payload-generator');
 
 (async () => {
   const app = express();
   const PORT = 8080;
 
   app.enable('trust proxy');
+  app.use(express.json());
 
   app.get('/csv', function (req, res) {
     const filePath = path.join(__dirname, 'test_csv_file.csv');
@@ -93,6 +95,51 @@ const fs = require('fs');
       });
     },
   );
+
+  app.post('/test-payload', (req, res) => {
+    // Read the response size header (e.g., "1kb", "10mb", "10mb")
+    const responseSizeHeader = req.headers['x-test-response-size'] || '1kb';
+
+    try {
+      // Parse the size and validate it
+      const targetSizeBytes = parseSize(responseSizeHeader);
+      const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+
+      // Validate user input: only allow 10MB or less
+      if (targetSizeBytes > MAX_SIZE_BYTES) {
+        res.status(400).json({
+          error: `Requested size exceeds maximum allowed size of 10MB. Requested: ${responseSizeHeader}`,
+          maxSize: '10mb',
+          requestedSize: responseSizeHeader
+        });
+        return;
+      }
+
+      // Generate appropriate response
+      const responsePayload = generateResponsePayload(targetSizeBytes);
+      res.json(responsePayload);
+    } catch (error) {
+      console.error('Error generating response:', error);
+      // Fallback to default response
+      res.json({
+        offset: 10,
+        limit: 5,
+        total: 20,
+        results: [
+          {
+            name: "Fake Backend Response",
+            fileSize: 23333,
+            extra: "extra",
+          },
+          {
+            name: "Fake Backend Response 2",
+            fileSize: 23333,
+            extra: "extra",
+          },
+        ],
+      });
+    }
+  });
 
   app.all('*', (req, res) => {
     let payloadSize = 0;
