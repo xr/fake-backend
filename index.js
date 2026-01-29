@@ -8,7 +8,7 @@ const { generateResponsePayload, parseSize } = require('./response-payload-gener
   const PORT = 8080;
 
   app.enable('trust proxy');
-  app.use(express.json());
+  app.use(express.json({ limit: '10MB' }));
 
   app.get('/csv', function (req, res) {
     const filePath = path.join(__dirname, 'test_csv_file.csv');
