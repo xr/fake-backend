@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const { generateResponsePayload, parseSize } = require('./response-payload-generator');
+const { version } = require('./package.json');
 
 (async () => {
   const app = express();
@@ -183,6 +184,6 @@ const { generateResponsePayload, parseSize } = require('./response-payload-gener
 
 
   app.listen(PORT, () => {
-    console.log(`Example app listening at http://localhost:${PORT}`);
+    console.log(`Example app listening at http://localhost:${PORT} (v${version})`);
   });
 })();
